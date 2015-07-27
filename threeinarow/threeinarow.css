@@ -1,0 +1,105 @@
+#game {
+  margin: 30px;
+  width: 1000px;
+}
+
+#fractions {
+  width:inherit;
+  height:300px;
+  background-color:white;
+  margin-bottom: 100px;
+}
+
+.fraction {
+  width:96px;
+  height: 144px;
+  margin:2px;
+  background-color:ivory;
+  border:solid red;
+}
+
+.decimal {
+    background-color:ivory;
+    height: 144px;
+    width: 92px;
+    font-size: 2.2em;
+    margin: 2px 4px;
+    float: left;
+    border: solid red;
+}
+
+button[disabled] {
+  background-color: lightgray;
+}
+
+.numerator {
+    font-size: 3em;
+
+    border-bottom: solid;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    padding-bottom: 7px;
+    /* height: 39px; */
+}
+
+.denominator {
+    font-size: 3em;
+
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#numberlinearea {
+  background:white;
+  height:20px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+#numberline {
+  width: 1000px;
+  height: 4px;
+  background-color:black;
+}
+
+#zero {
+  float:left;
+  clear:left;
+  margin-top:3px;
+}
+
+#one {
+  float:right;
+  margin-top:3px;
+}
+
+.dot {
+  height:16px;
+  width:10px;
+  border-radius: 5px;
+  margin-top:-10px;
+  float:left;
+}
+
+.player1 {
+  background-color:red;
+}
+
+.player2 {
+  background-color:green;
+}
+
+.last {
+  border:solid yellow;
+  border-radius:8px;
+  margin-top:-10px;
+}
+
+#dot1 {
+  margin-left:70px;
+}
+
+#dot2 {
+  margin-left:30px;
+}

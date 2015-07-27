@@ -1,0 +1,66 @@
+body {
+
+}
+
+#player {
+  width:700px;
+}
+
+#answer {
+  text-align:center;
+  font-size:4em;
+  width:inherit;
+
+
+}
+
+.preposition {
+  text-align:center;
+  font-size:1.5em;
+  width:inherit;
+
+
+}
+
+#percents, #out-of {
+  width:inherit;
+  font-size:2.5em;
+  margin-left:15%;
+
+  overflow:hidden;
+}
+
+.answer {
+  width:125px;
+  float:left;
+}
+
+#check {
+  width:inherit;
+  text-align:center;
+
+
+
+
+  padding:20px;
+}
+
+#check a {
+  text-decoration: none;
+  font-size:2em;
+  padding:5px 10px;
+}
+
+#check .inactive {
+
+}
+
+#success {
+  font-size:3em;
+  height:80px;
+}
+
+#hint {
+  width:inherit;
+  height:80px;
+}

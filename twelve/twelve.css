@@ -1,0 +1,71 @@
+#game {
+  width: 876px;
+  height: 350px;
+  position:relative;
+}
+
+#cards {
+  height: 225px;
+}
+
+.card {
+    font-size: 72px;
+    background-color: ivory;
+    float: left;
+    margin: 20px;
+    margin-left: 30px;
+    width: 131px;
+    height: 120px;
+    text-align: center;
+    border: solid red;
+    border-radius: 16px;
+}
+
+#actionBar {
+  height: 76px;
+}
+
+#answer {
+  height: inherit;
+  width: 394px;
+  font-size: 3em;
+  border: 3px solid fuchsia;
+  margin-left: 34px;
+  float: left;
+}
+
+#output {
+  height: inherit;
+  width:200px;
+  background-color: lightgreen;
+  font-size: 2.5em;
+  padding: 5px;
+  text-align: center;
+  /* display: inline-block; */
+  float: left;
+}
+
+#score {
+  font-size: 4em;
+  /* float: right; */
+  position: absolute;
+  top: 15px;
+  right: 0px;
+  border: solid;
+  height: 281px;
+  width: 37px;
+}
+
+#scorefill {
+  width: 31px;
+  background-color: red;
+  position: absolute;
+  bottom: 0px;
+}
+
+#skip {
+  height: inherit;
+  width:85px;
+  font-size: 2em;
+  float: left;
+}
