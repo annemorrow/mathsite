@@ -10,48 +10,46 @@
     <link rel="stylesheet" type="text/css" href="percents.css" media="screen" />
   </head>
   <body>
+  
+    <p>Select one percent and one total to make a true statement.</p>
+  
     <div id="player">
-      <div id="answer">
-        6
-      </div>
-      <div class="preposition">
-        is
-      </div>
+      <div id="answer">10</div>
+      <div class="preposition">is</div>
       <div id="percents">
-        <form>
-          <div class="answer" id="p0"><input type="radio" name="percent" value=0>50%</div>
-          <div class="answer" id="p1"><input type="radio" name="percent" value=1>20%</div>
-          <div class="answer" id="p2"><input type="radio" name="percent" value=2>25%</div>
-          <div class="answer" id="p3"><input type="radio" name="percent" value=3>10%</div>
-        </form>
+        <div class="percent">%</div>
+        <div class="percent">%</div>
+        <div class="percent">%</div>
+        <div class="percent">%</div>
       </div>
-      <div class="preposition">
-        of
+      <div class="preposition">of</div>
+      <div id="totals">
+        <div class="total">10</div>
+        <div class="total">10</div>
+        <div class="total">10</div>
+        <div class="total">10</div>
       </div>
-      <div id="out-of">
-        <form>
-          <div class="answer" id="o0"><input type="radio" name="outof" value=0>12</div>
-          <div class="answer" id="o1"><input type="radio" name="outof" value=1>24</div>
-          <div class="answer" id="o2"><input type="radio" name="outof" value=2>100</div>
-          <div class="answer" id="o3"><input type="radio" name="outof" value=3>60</div>
-        </form>
-      </div>
-      <div id="check">
-        <a href="#" id="checkbtn">Check Answer</a>
-        <a href="#" id="next">Next</a>
-      </div>
-      <div id="success"></div>
-      <div id="hint"></div>
+      <div id="notes"></div>
+      <button id="check">CHECK</button>
+      <button id="next">NEXT</button>
     </div>
     
-    <a type="button" class="btn btn-lg btn-primary" href="../index.html">
-Back to Game Menu
-</a>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="../js/bootstrap.min.js"></script>
-<script src="percents.js"></script>
+    <a id="back" type="button" class="btn btn-lg btn-primary" href="../index.html">
+      Back to Game Menu
+    </a>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="percents.js"></script>
   </body>
 </html>
-

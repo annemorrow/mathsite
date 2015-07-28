@@ -1,66 +1,70 @@
-body {
+#player {
+    width:700px;
+}
+
+#answer {
+    font-size: 3.7em;
+    text-align:center;
+}
+
+.preposition {
+    text-align: center;
+    width:inherit;
+    font-size: 2em;
+}
+
+.percent, .total {
+    font-size: 2.7em;
+
+    float: left;
+    margin: 13px;
+    /* background-color: blue; */
+    padding: 8px;
+    background-color: ivory;
+    border: solid red;
+    border-radius: 11px;
+    width: 149px;
+    text-align:center;
+}
+
+.percent {
+    /* background-color: blue; */
+
+}
+
+.total {
+    /* background-color: green; */
 
 }
 
 #player {
-  width:700px;
-}
-
-#answer {
-  text-align:center;
-  font-size:4em;
-  width:inherit;
-
 
 }
 
-.preposition {
-  text-align:center;
-  font-size:1.5em;
-  width:inherit;
-
+#percents {
+    /* height: 113px; */
 
 }
 
-#percents, #out-of {
-  width:inherit;
-  font-size:2.5em;
-  margin-left:15%;
-
-  overflow:hidden;
-}
-
-.answer {
-  width:125px;
-  float:left;
-}
-
-#check {
-  width:inherit;
-  text-align:center;
-
-
-
-
-  padding:20px;
-}
-
-#check a {
-  text-decoration: none;
-  font-size:2em;
-  padding:5px 10px;
-}
-
-#check .inactive {
+#totals {
+    height: 112px;
 
 }
 
-#success {
-  font-size:3em;
-  height:80px;
+button {
+    background-color: lightgreen;
+
+    margin: 5px;
 }
 
-#hint {
-  width:inherit;
-  height:80px;
+#back {
+  margin-top:15px;
+}
+
+.inactive {
+  background-color:lightgray;
+}
+
+#notes {
+  height:40px;
 }

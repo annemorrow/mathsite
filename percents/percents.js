@@ -43,7 +43,6 @@ function makeOptions(obj) {
   shuffle(obj.options);
 }
 
-
 function displayProblem() {
   var el = document.getElementById('answer');
   var displayAnswer;
@@ -55,50 +54,52 @@ function displayProblem() {
   el.textContent = displayAnswer;
   for (i = 0; i < 4; i++)
   {
-    var el = document.getElementById('p' + i);
-    el.firstChild.nextSibling.textContent = percents.options[i] + "%";
-  
-    var el = document.getElementById('o' + i);
-    el.firstChild.nextSibling.textContent = outOf.options[i];
+    $('#percents').children()[i].textContent = percents.options[i] + "%";
+    $($('#percents').children()[i]).data('value', percents.options[i]);
+    $('#totals').children()[i].textContent = outOf.options[i];
+    $($('#totals').children()[i]).data('value', outOf.options[i]);
   }
+  $('.percent').css("background-color", "ivory");
+  $('.total').css("background-color", "ivory");
 }
 
 function next() {
   chooseAnswers();
-  displayProblem();
   makeOptions(percents);
   makeOptions(outOf);
   displayProblem();
-  document.getElementById('success').textContent = "";
-  document.getElementById('hint').textContent = "";
-  $('input[name=percent]').attr('checked',false);
-  $('input[name=outof]').attr('checked',false);
+  document.getElementById('notes').textContent = "";
   $('#next').addClass("inactive");
 }
 
-next();
+var chosenPercent;
+var chosenTotal;
+
 
 $(document).ready(function() {
-  $('#checkbtn').click(function(evt){
-    evt.preventDefault();
-    percents.choice = percents.options[$('input[name="percent"]:checked').val()];
-    outOf.choice = outOf.options[$('input[name="outof"]:checked').val()];
-    if (percents.choice / 100 * outOf.choice == answer) {
-      document.getElementById('success').textContent = "Correct!";
-      $('#next').removeClass("inactive");
+  next();
+  $('.percent').click(function() {
+    console.log($(this).data('value'));
+    chosenPercent = $(this).data('value');
+    $('.percent').css("background-color", "ivory");
+    $(this).css("background-color", "lightgreen");
+  });
+  $('.total').click(function() {
+    console.log($(this).data('value'));
+    chosenTotal = $(this).data('value');
+    $('.total').css("background-color", "ivory");
+    $(this).css("background-color", "lightgreen");
+  });
+  $('#check').click(function() {
+    if (chosenPercent / 100 * chosenTotal == answer) {
+      document.getElementById('notes').textContent = "SUCCESS";
+      $('#next').removeClass('inactive');
     } else {
-      document.getElementById('success').textContent = "Try again!";
-      if (outOf.answer == 100) {
-        document.getElementById('hint').textContent = "Hint: " + hints["outof100"];
-      } else {
-        document.getElementById('hint').textContent = "Hint: " + hints[String(percents.answer)];
-      }
+      document.getElementById('notes').textContent = "Hint: " + hints[String(percents.answer)];
     }
   });
-  
-  $('#next').click(function(evt) {
+  $('#next').click(function() {
     if (!$('#next').hasClass("inactive")) {
-      evt.preventDefault();
       next();
     }
   });
