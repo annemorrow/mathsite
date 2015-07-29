@@ -55,12 +55,18 @@ button[disabled] {
   height:20px;
   display: table-cell;
   vertical-align: middle;
+  position: relative;
 }
 
 #numberline {
   width: 1000px;
   height: 4px;
   background-color:black;
+}
+
+#dots {
+  width: inerit;
+  position: relative;
 }
 
 #zero {
@@ -79,7 +85,7 @@ button[disabled] {
   width:10px;
   border-radius: 5px;
   margin-top:-10px;
-  float:left;
+  position:absolute;
 }
 
 .player1 {
@@ -102,4 +108,21 @@ button[disabled] {
 
 #dot2 {
   margin-left:30px;
+}
+
+#win {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  margin-left: -250px;
+  width:500px;
+  margin-top:-150px;
+  height:300px;
+  background-color: lightgreen;
+  text-align: center;
+  font-size: 4em;
+  padding-top: 80px;
+  color: blue;
 }

@@ -1,61 +1,60 @@
 function Fraction(numerator, denominator) {
   this.numerator = numerator;
   this.denominator = denominator;
-  this.htmlString = function() {
-    var str = '<button class="fraction" onclick="selectFraction(this)">'
-    str += '<div class="numerator">' + numerator + '</div>'
-    str += '<div class="denominator">' + denominator + '</div></button>';
-    return str;
-  }
 }
+
+Fraction.prototype.htmlString = function() {
+    var str = '<button class="fraction" onclick="selectFraction(this)">'
+    str += '<div class="numerator">' + this.numerator + '</div>'
+    str += '<div class="denominator">' + this.denominator + '</div></button>';
+    return str;
+};
 
 function Dot(player, value) {
   this.player = player;
   this.value = value;
 }
 
-var dotsArray = {
-  playedList : [],
-  addDot     : function(dot) {
-    this.playedList.push(dot);
-  },
-  sort       : function() {
-    for (var i = 0; i < this.playedList.length; i++) {
-      var minIndex = i;
-      console.log("i is " + i);
-      console.log("value of i = " + this.playedList[i].value);
-      for (var j = i + 1; j < this.playedList.length; j++) {
-        console.log("value of j = " + this.playedList[j].value);
-        if (this.playedList[j].value < this.playedList[minIndex].value) minIndex = j;
-      }
-      var temp = this.playedList[i];
-      this.playedList[i] = this.playedList[minIndex];
-      this.playedList[minIndex] = temp;
+dotsArray = [];
+
+function addDotToModel(dot) {
+  // insert dot in value position, so scanning for winner is quick
+  if (dotsArray.length === 0) {
+    dotsArray[0] = dot;
+  } else {
+    var index = 0;
+    while(dotsArray.length > index && dotsArray[index].value < dot.value) {
+      index++;
     }
-  },
-  dotHtml    : function(dotIndex) {
-    var dot = this.playedList[dotIndex];
-    var margin;
-    if (dotIndex == 0) {
-      // the 10 the width of the dot
-      margin = Math.round(1000 * dot.value) -10 ;
-    } else {
-      margin = dot.value - this.playedList[dotIndex - 1].value;
-      margin = Math.round(1000 * margin) -10;
-    }
-    var str = '<div class="dot ' + dot.player + '" style="margin-left:' + margin +'px"></div>';
-    return str;
-  },
-  placeDots  : function() {
-    var el = document.getElementById("dots");
-    el.innerHTML = "";
-    this.sort();
-    for (var i = 0; i < this.playedList.length; i++) {
-      el.innerHTML += this.dotHtml(i);
-      console.log(el.innerHTML);
-    }
+    dotsArray.splice(index, 0, dot);
   }
 }
+
+function checkForWinner() {
+  var player = dotsArray[0].player;
+  var count = 1;
+  for (var i = 1; i < dotsArray.length; i++) {
+    if (dotsArray[i].player === player) {
+      count++;
+        if (count === 3) {
+          return player;
+        }
+    } else {
+      player = dotsArray[i].player;
+      count = 1;
+    }
+  }
+  return false;
+}
+
+function addDotToLine(dot) {
+  var dotDiv = document.createElement("div");
+  $(dotDiv).addClass("dot");
+  $(dotDiv).addClass(dot.player);
+  $(dotDiv).css("left", dot.value * 100 + "%");
+  $("#dots").append(dotDiv);
+}
+
 
 // fractions and decimals
 var fractionCatalogue = [
@@ -72,7 +71,7 @@ var fractionCatalogue = [
   new Fraction(3, 5),
   new Fraction(1, 8),
   new Fraction(7, 10),
-  new Fraction(3, 5),
+  new Fraction(2, 5),
   new Fraction(3, 8),
   new Fraction(4, 9),
   new Fraction(1, 20),
@@ -88,7 +87,6 @@ for (var i = 0; i < 20; i++) {
 var player = "player1";
 
 function switchPlayer() {
-  console.log("switchPlayer called");
   var heading = document.getElementsByTagName("h3")[0];
   if (player == "player1") {
     player = "player2";
@@ -103,8 +101,21 @@ function selectFraction(button) {
   var num = Number(button.getElementsByClassName("numerator")[0].innerHTML);
   var denom = Number(button.getElementsByClassName("denominator")[0].innerHTML);
   var dot = new Dot(player, num/denom);
-  dotsArray.addDot(dot);
-  dotsArray.placeDots();
+  addDotToModel(dot);
+  addDotToLine(dot);
   button.disabled = true;
-  switchPlayer();
+  var winner = checkForWinner();
+  if (winner) {
+    var winnerName = "winner";
+    if (winner == "player1") {
+      winnerName = "PLAYER 1";
+    } else {
+      winnerName = "PLAYER 2";
+    }
+    console.log(winner + " WINS");
+    $("#win p").text(winnerName + " WINS");
+    $("#win").css("display", "block");
+  } else {
+    switchPlayer();
+  }
 }
