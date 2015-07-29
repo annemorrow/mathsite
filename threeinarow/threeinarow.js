@@ -49,9 +49,14 @@ function checkForWinner() {
 
 function addDotToLine(dot) {
   var dotDiv = document.createElement("div");
+  var popup = document.createElement("div");
+  $(popup).addClass("popup");
+  $(popup).text(dot.value.toFixed(2));
+  $(dotDiv).append(popup);
   $(dotDiv).addClass("dot");
   $(dotDiv).addClass(dot.player);
   $(dotDiv).css("left", dot.value * 100 + "%");
+  $(dotDiv).data("value", dot.value);
   $("#dots").append(dotDiv);
 }
 

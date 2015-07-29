@@ -126,3 +126,13 @@ button[disabled] {
   padding-top: 80px;
   color: blue;
 }
+
+.dot .popup {
+  margin-top:-23px;
+  margin-left:-7px;
+  display: none;
+}
+
+.dot:hover .popup {
+  display: block;
+}
