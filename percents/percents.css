@@ -68,3 +68,7 @@ button {
 #notes {
   height:40px;
 }
+
+.percent:hover, .total:hover {
+  cursor: pointer;
+}
