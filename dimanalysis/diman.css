@@ -1,128 +1,51 @@
-.number {
-  float: left;
+body {
+  margin:30px;
 }
 
-.unit {
-  float: left;
-  margin-left: 8px;
+#equation p, h4 {
+  display: inline;
 }
 
-.numerator, .denominator {
-  overflow: hidden;
-}
-
-.numerator {
-  border-bottom: solid;
-  border-width: 1px;
-}
-
-.denominator {
-  border-top: solid;
-  border-width: 1px;
-}
-
-.fraction {
-  width: 120px;
-  margin-bottom: 8px;
-  float:left;
-}
-
-.type {
-  float: left;
-  margin: 0px 70px;
-  width: 210px;
-}
-
-#customList {
-  width: 100%;
-  background-color = gray;
+#equation p {
+  margin-left:15px;
 }
 
 button {
-  width: 40px;
-  height: 40px;
-  background-color:green;
-  margin-left:5px;
-}
-
-.buttonbox {
+  width:30px;
+  height:30px;
+  margin-top:20px;
   float:right;
 }
 
-.invert {
-  background-image: url("invertarrowsred.png");
+.fraction {
+  float:left;
+}
+
+.fracRow {
+  width:400px;
+  height:70px;
+}
+
+.flip {
+  background-color:red;
+  width:100px;
+  color:white;
+  font-weight:bold;
+  font-size:1.2em;
+}
+
+.use {
+  background-color:lightgreen;
+  width:100px;
+  color:white;
+  font-weight:bold;
+  font-size:1.2em;
 }
 
 #equation {
-  height: 185px;
-}
-.factor {
-  float: left;
-  margin: 15px;
-}
-.delete {
-  height: 18px;
-  width: 36px;
-  border-radius: 6px;
-  background-color: red;
-}
-
-#factors .fraction {
-  float: none;
+  height:150px;
 }
 
 #result {
-  float: left;
-  margin: 15px;
-}
-
-#result .number {
-  float: left;
-  margin: 15px;
-}
-
-#result .unitBlock {
-  float: right;
-}
-
-.symbol {
-  float: left;
-  margin-top: 24px;
-}
-
-input[type=text] {
-  height: 30px;
-  width: 120px;
-  font-size: 1.2em;
-}
-
-input[type=button] {
-  background-color: cadetblue;
-  height: 30px;
-  font-size: 1.2em;
-}
-
-.factorbox {
-  width: 210px;
-  overflow: hidden;
-}
-
-#fixed {
-  height: 185px;
-  margin-left: 60px;
-  margin-right: 60px;
-}
-
-.content {
-  position: absolute;
-  top: 230px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  overflow-y:scroll;
-  margin-top: 10px;
-}
-
-#custom {
-  margin-left: 70px;
+  float:left;
 }

@@ -1,196 +1,333 @@
-function Fraction(numeratorNumber, numeratorUnit, denominatorNumber, denominatorUnit) {
-  this.numeratorNumber = numeratorNumber;
-  this.numeratorUnit = numeratorUnit;
-  this.denominatorNumber = denominatorNumber;
-  this.denominatorUnit = denominatorUnit;
-  
-  this.reciprical = function() {
-    var inverse = new Fraction(denominatorNumber, denominatorUnit, numeratorNumber, numeratorUnit);
-    return inverse;
-    }
-  
-  this.htmlString = function() {
-    str = '<div class="fraction"><div class="numerator"><div class="number">';
-    str += numeratorNumber;
-    str += '</div><div class="unit">';
-    str += numeratorUnit;
-    str += '</div></div><div class="denominator"><div class="number">';
-    str += denominatorNumber;
-    str += '</div><div class="unit">';
-    str += denominatorUnit;
-    str += '</div></div></div>';
-    return str;
+function Fraction(num, denom, units) {
+  this.num = num;
+  this.denom = denom;
+  this.units = units;
+  this.canceled = {};
+  for (key in units) {
+    this.canceled[key] = 0;
   }
-  
 }
 
-function getFractionFromHTML(fractionElement) {
-  var numerator = fractionElement.getElementsByClassName("numerator")[0];
-  var numeratorNumber = Number(numerator.getElementsByClassName("number")[0].innerHTML);
-  var numeratorUnit = numerator.getElementsByClassName("unit")[0].innerHTML;
-  var denominator = fractionElement.getElementsByClassName("denominator")[0];
-  var denominatorNumber = Number(denominator.getElementsByClassName("number")[0].innerHTML);
-  var denominatorUnit = denominator.getElementsByClassName("unit")[0].innerHTML;
-  var frac = new Fraction(numeratorNumber, numeratorUnit, denominatorNumber, denominatorUnit);
-  return frac;
+function fractionMaker(num, numUnit, denom, denomUnit) {
+  var units = {};
+  units[numUnit] = 1;
+  units[denomUnit] = -1;
+  return new Fraction(num, denom, units);
 }
+
+Fraction.prototype.reciprocal = function() {
+  var recip = new Fraction(this.denom, this.num, this.units);
+  for (key in this.units) {
+    recip.units[key] = - this.units[key];
+  }
+  return recip;
+}
+
+Fraction.prototype.equals = function(that) {
+  if (this.num !== that.num || this.denom !== that.denom) {
+    return false;
+  }
+  for (key in this.units) {
+    if (!(key in that.units)) {
+      return false;
+    }
+    if (this.units[key] !== that.units[key]) {
+      return false;
+    }
+  }
+  for (key in that.units) {
+    if (!(key in this.units)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+Fraction.prototype.multiply = function(that) {
+  var num = this.num * that.num / this.denom / that.denom;
+  var units = {};
+  for (key in this.units) {
+    if (!(key in units)) {
+      units[key] = 0;
+    }
+    units[key] += this.units[key];
+  }
+  for (key in that.units) {
+    if (!(key in units)) {
+      units[key] = 0;
+    }
+    units[key] += that.units[key]
+  }
+  for (key in units) {
+    if (units[key] === 0) {
+      delete units[key];
+    }
+  }
+  return new Fraction(num, 1, units);
+}
+
+Fraction.prototype.copyClean = function() {
+  // don't want to include cancelation info
+  var copyUnits = {};
+  for (key in this.units) {
+    copyUnits[key] = this.units[key];
+  }
+  return new Fraction(this.num, this.denom, copyUnits);
+}
+
+Fraction.prototype.availableUnits = function() {
+  var available = {};
+  for (key in this.units) {
+    available[key] = this.units[key] - this.canceled[key];
+  }
+  return available;
+}
+
+Fraction.prototype.cancelWith = function(that) {
+  var availableThis = this.availableUnits();
+  var availableThat = that.availableUnits();
+  for (key in availableThis) {
+    if (key in availableThat) {
+      while (availableThis[key] > 0 && availableThat[key] < 0) {
+        this.canceled[key]++;
+        that.canceled[key]--;
+        availableThis[key]--;
+        availableThat[key]++;
+      }
+      while (availableThis[key] < 0 && availableThat[key] > 0) {
+        this.canceled[key]--;
+        that.canceled[key]++;
+        availableThis[key]++;
+        availableThat[key]--;
+      }
+    }
+  }
+}
+
+var equation = {
+  factors: [],
+  answer: new Fraction(1, 1, {})
+};
+
+equation.add = function(fraction) {
+  for (var i = 0; i < this.factors.length; i++) {
+    this.factors[i].cancelWith(fraction);
+  }
+  this.factors.push(fraction);
+  this.answer = this.answer.multiply(fraction);
+}
+
+var latexString = function(frac) {
+  var numUnits = {};
+  var denomUnits = {};
+  for (key in frac.units) {
+    if (frac.units[key] > 0) {
+      numUnits[key] = frac.units[key];
+    } else if (frac.units[key] < 0) {
+      denomUnits[key] = -frac.units[key];
+    }
+  }
+  var latex = "$$\\require{cancel}\\left(\\frac{" + frac.num;
+  for (key in numUnits) {
+    var keylatex = "\\hbox{ " + key + " }";
+    if (frac.canceled[key] !== 0) {
+      keylatex = "\\cancel{" + keylatex + "}";
+    }
+    if (numUnits[key] !== 1) {
+      keylatex = keylatex + "^" + numUnits[key];
+    }
+    latex += keylatex;
+  }
+  latex += "}{" + frac.denom;
+  for (key in denomUnits) {
+    var keylatex = "\\hbox{ " + key + " }";
+    if (frac.canceled[key] !== 0) {
+      keylatex = "\\cancel{" + keylatex + "}";
+    }
+    if (denomUnits[key] !== 1) {
+      keylatex = keylatex + "^" + denomUnits[key];
+    }
+    latex += keylatex;
+  }
+  latex += "}\\right)$$";
+  return latex;
+};
+
+var answerLatex = function() {
+  var frac = equation.answer;
+  var numUnits = {};
+  var denomUnits = {};
+  for (key in frac.units) {
+    if (frac.units[key] > 0) {
+      numUnits[key] = frac.units[key];
+    } else if (frac.units[key] < 0) {
+      denomUnits[key] = -frac.units[key];
+    }
+  }
+  var frac = equation.answer;
+  var latex = "$$=" + frac.num + "\\frac{";
+  for (key in numUnits) {
+    var keylatex = "\\hbox{ " + key + " }";
+    if (numUnits[key] !== 1) {
+      keylatex = keylatex + "^" + numUnits[key];
+    }
+    latex += keylatex;
+  }
+  latex += "}{"
+  for (key in denomUnits) {
+    var keylatex = "\\hbox{ " + key + " }";
+    if (denomUnits[key] !== 1) {
+      keylatex = keylatex + "^" + denomUnits[key];
+    }
+    latex += keylatex;
+  }
+  latex += "}$$";
+  return latex;
+}
+
+var insert = function(frac, div) {
+  div.innerHTML = latexString(frac);
+  MathJax.Hub.Queue(["Typeset", MathJax.Hub, div])();
+  $(div).data("fraction", frac);
+  $(div).addClass("fraction");
+};
+
+var displayAnswer = function() {
+  var div = document.getElementById("result");
+  if (equation.factors.length === 0) {
+    div.innerHTML = "";
+  } else {
+  div.innerHTML = answerLatex();
+  MathJax.Hub.Queue(["Typeset", MathJax.Hub, div])();
+  }
+}
+
+var displayAllFactors = function() {
+  var factorsList = document.getElementById("factors");
+  factorsList.innerHTML = "";
+  for (var i = 0; i < equation.factors.length; i++) {
+    var div = document.createElement("div");
+    factorsList.appendChild(div);
+    insert(equation.factors[i], div);
+    $(div).dblclick(function() {
+      remove(this);
+    });
+  }
+}
+
+var flip = function(div) {
+  var frac = $(div).data("fraction");
+  insert(frac.reciprocal(), div);
+};
+
+
+var useFrac = function(frac) {
+  var fracCopy = frac.copyClean();
+  equation.add(fracCopy);
+  displayAllFactors();
+  displayAnswer();
+};
+
+function remove(div) {
+  console.log("remove function called");
+  var frac = $(div).data("fraction");
+  $(div).remove();
+  
+  for (var i = 0; i < equation.factors.length; i++) {
+    if (frac.equals(equation.factors[i])) {
+      console.log(i + " is index");
+      equation.factors.splice(i, 1);
+      break;
+    }
+  }
+  var copyFactors = [];
+  for (var j = 0; j < equation.factors.length; j++) {
+    copyFactors.push(equation.factors[j].copyClean());
+  }
+  equation.factors = [];
+  equation.answer = new Fraction(1, 1, {});
+  for (var k = 0; k < copyFactors.length; k++) {
+    equation.add(copyFactors[k]);
+  }
+  displayAllFactors();
+  displayAnswer();
+}
+
+
+
+function addToList(fraction, listId) {
+  var list = document.getElementById(listId);
+  var row = document.createElement("div");
+  var fracDiv = document.createElement("div");
+  var reciprocalBtn = document.createElement("button");
+  var includeBtn = document.createElement("button");
+  list.appendChild(row);
+  row.appendChild(fracDiv);
+  row.appendChild(includeBtn);
+  row.appendChild(reciprocalBtn);
+  $(row).addClass("fracRow");
+  insert(fraction, fracDiv);
+  $(reciprocalBtn).addClass("flip");
+  $(reciprocalBtn).text("reciprocal");
+  $(reciprocalBtn).click(function() {
+    flip(fracDiv);
+  });
+  $(includeBtn).addClass("use");
+  $(includeBtn).text("use factor");
+  $(includeBtn).click(function() {
+    var fraction = $(fracDiv).data("fraction");
+    useFrac(fraction);
+  });
+  return row;
+};
+
+function fillList(array, listID) {
+  for (var i = 0; i < array.length; i++) {
+    var frac = array[i];
+    addToList(frac, listID);
+  }
+}
+
+
+
 
 
 
 
 // Distances
 
-var millimetersmeters = new Fraction(1000, "millimeters", 1, "meters");
-var centermetersmeters = new Fraction(100, "centimeters", 1, "meters");
-var decimetersmeters = new Fraction(10, "decimeters", 1, "meters");
-var dekametersmeters = new Fraction(1, "dekameters", 10, "meters");
-var kilometersmeters = new Fraction(1, "kilometers", 1000, "meters");
+var millimetersmeters = fractionMaker(1000, "millimeters", 1, "meters");
+var centermetersmeters = fractionMaker(100, "centimeters", 1, "meters");
+var decimetersmeters = fractionMaker(10, "decimeters", 1, "meters");
+var dekametersmeters = fractionMaker(1, "dekameters", 10, "meters");
+var kilometersmeters = fractionMaker(1, "kilometers", 1000, "meters");
 
-var inchesfeet = new Fraction(12, "inches", 1, "feet");
-var feetyards = new Fraction(3, "feet", 1, "yards");
-var feetmiles = new Fraction(5280, "feet", 1, "miles");
+var inchesfeet = fractionMaker(12, "inches", 1, "feet");
+var feetyards = fractionMaker(3, "feet", 1, "yards");
+var feetmiles = fractionMaker(5280, "feet", 1, "miles");
 
-var feetmeters = new Fraction(1, "meters", 3.28, "feet");
-var mileskilometers = new Fraction(1, "miles", 1.609, "kilometers");
+var feetmeters = fractionMaker(1, "meters", 3.28, "feet");
+var mileskilometers = fractionMaker(1, "miles", 1.609, "kilometers");
 
 var distances = [millimetersmeters, centermetersmeters, decimetersmeters, dekametersmeters, kilometersmeters, inchesfeet, feetyards, feetmiles, feetmeters, mileskilometers];
 
 
 // Volumes
 
-var quartsgallons = new Fraction(4, "quarts", 1, "gallons");
-var pintsgallons = new Fraction(8, "pints", 1, "gallons");
-var ouncepints = new Fraction(1, "pints", 16, "ounces");
-var litersquarts = new Fraction(1, "quarts", 0.946, "liters");
+var quartsgallons = fractionMaker(4, "quarts", 1, "gallons");
+var pintsgallons = fractionMaker(8, "pints", 1, "gallons");
+var ouncepints = fractionMaker(1, "pints", 16, "ounces");
+var litersquarts = fractionMaker(1, "quarts", 0.946, "liters");
 
 var volumes = [quartsgallons, pintsgallons, ouncepints, litersquarts];
 
 // Times
-var daysyears = new Fraction(1, "years", 365, "days");
-var hoursdays = new Fraction(1, "days", 24, "hours");
-var minuteshours = new Fraction (1, "hours", 60, "minutes");
-var secondsminutes = new Fraction (1, "minutes", 60, "seconds");
+var daysyears = fractionMaker(1, "years", 365, "days");
+var hoursdays = fractionMaker(1, "days", 24, "hours");
+var minuteshours = fractionMaker(1, "hours", 60, "minutes");
+var secondsminutes = fractionMaker(1, "minutes", 60, "seconds");
 
 var times = [daysyears, hoursdays, minuteshours, secondsminutes];
-
-function invert(elembutton) {
-  var el = elembutton.parentElement.previousSibling; // should be the fraction;
-  var original = getFractionFromHTML(el);
-  console.log(original);
-  var inverted = original.reciprical();
-  el.innerHTML = inverted.htmlString();
-}
-
-function add(addButton) {
-  console.log("button pressed");
-  var el = addButton.parentElement.previousSibling;
-  var frac = getFractionFromHTML(el);
-  factorList.push(frac);
-  populateFactorList();
-  multiply(frac);
-}
-
-
-function populateList(listName, array) {
-  var el = document.getElementById(listName);
-  for (var i = 0; i < array.length; i++) {
-    var str = "<div class='factorbox'><div>" + array[i].htmlString() + "</div>";
-    str += "<div class='buttonbox'>";
-    str += "<button class='invert' onclick='invert(this)'></button>";
-    str += "<button class='add' onclick='add(this)'></button>";
-    str += "</div></div>"
-    el.innerHTML += str;
-  }
-}
-
-var factorList = [];
-
-function populateFactorList() {
-  var el = document.getElementById("factors");
-  el.innerHTML = "";
-  for (var i = 0; i < factorList.length; i++) {
-    var str = "<div class='factor'>" + factorList[i].htmlString() + "<button class='delete' onclick='del(this)'></button></div><div class='symbol'>&times</div>";
-    el.innerHTML += str;
-  }
-}
-
-function del(deleteButton) {
-  console.log("delete pressed");
-  var newFactorList = [];
-  var factorDivs = document.getElementById("factors").getElementsByClassName('factor');
-  var removeDiv = deleteButton.parentElement;
-  for (var i = 0; i < factorDivs.length; i++) {
-    var frac = getFractionFromHTML(factorDivs[i]);
-    if (factorDivs[i] !== removeDiv) {
-      newFactorList.push(frac);
-    } else {
-      multiply(frac.reciprical());
-    } 
-  }
-  factorList = newFactorList;
-  populateFactorList();
-  answer.display();
-}
-
-
-
-populateList("distances", distances);
-
-populateList("volumes", volumes);
-
-populateList("times", times);
-
-
-
-
-var answer = {
-  number: 1,
-  units: {},
-  numUnitString: "",
-  denomUnitString: "",
-  htmlString: function() {
-    var str = "<div class='number'>" + parseFloat((this.number).toFixed(10)) + "</div>";
-    str += "<div class='unitBlock'><div class='numerator' class='unit'>" + this.numUnitString + "</div>";
-    str += "<div class='denominator' class='unit'>" + this.denomUnitString + "</div></div>";
-    return str;
-  },
-  display: function() {
-    var el = document.getElementById("result");
-    el.innerHTML = this.htmlString();
-    document.getElementById('factors').lastChild.innerHTML = "=";
-  }
-};
-
-function multiply(fraction) {
-  answer.number *= (fraction.numeratorNumber / fraction.denominatorNumber);
-  var numUnitValue = answer.units[fraction.numeratorUnit] || 0;
-  numUnitValue += 1;
-  answer.units[fraction.numeratorUnit] = numUnitValue;
-  var denomUnitValue = answer.units[fraction.denominatorUnit] || 0;
-  denomUnitValue -= 1;
-  answer.units[fraction.denominatorUnit] = denomUnitValue;
-  makeUnitStrings();
-  answer.display();
-}
-
-function makeUnitStrings() {
-  answer.numUnitString = "";
-  answer.denomUnitString = "";
-  for (var unit in answer.units) {
-    if (answer.units[unit] > 0) {
-      answer.numUnitString += " " + unit;
-      if (answer.units[unit] > 1) {
-        answer.numUnitString += "<sup>" + answer.units[unit] + "</sup>";
-      }
-    }
-    if (answer.units[unit] < 0) {
-      answer.denomUnitString += " " + unit;
-      if (answer.units[unit] < -1) {
-        answer.denomUnitString += "<sup>" + -answer.units[unit] + "</sup>";
-      }
-    }
-  }
-}
 
 
 var customUnits = [];
@@ -201,9 +338,19 @@ function submitFactor() {
   var numeratorUnit = document.getElementById("unit1").value;
   var denominatorNumber = Number(document.getElementById("number2").value);
   var denominatorUnit = document.getElementById("unit2").value;
-  var frac = new Fraction(numeratorNumber, numeratorUnit, denominatorNumber, denominatorUnit);
+  var frac = fractionMaker(numeratorNumber, numeratorUnit, denominatorNumber, denominatorUnit);
   customUnits.push(frac);
-  document.getElementById("customList").innerHTML = "<h3>Custom Units</h3>";
-  populateList("customList", customUnits);
+  fillList(customUnits, "customList");
 }
- 
+
+$(document).ready(function() {
+
+  fillList(distances, "distances");
+  fillList(volumes, "volumes");
+  fillList(times, "times");
+  
+  $("#submit").click(function() {
+    submitFactor();
+  });
+
+});
