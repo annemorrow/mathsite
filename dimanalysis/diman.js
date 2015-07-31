@@ -9,10 +9,12 @@ function Fraction(num, denom, units) {
 }
 
 function fractionMaker(num, numUnit, denom, denomUnit) {
-  var units = {};
-  units[numUnit] = 1;
-  units[denomUnit] = -1;
-  return new Fraction(num, denom, units);
+  var units = unitsReader(numUnit);
+  var denominatorUnits = unitsReader(denomUnit);
+  for (key in denominatorUnits) {
+    units[key] = - denominatorUnits[key];
+  }
+  return frac = new Fraction(num, denom, units);
 }
 
 Fraction.prototype.reciprocal = function() {
@@ -298,8 +300,6 @@ function fillList(array, listID) {
 
 var millimetersmeters = fractionMaker(1000, "millimeters", 1, "meters");
 var centermetersmeters = fractionMaker(100, "centimeters", 1, "meters");
-var decimetersmeters = fractionMaker(10, "decimeters", 1, "meters");
-var dekametersmeters = fractionMaker(1, "dekameters", 10, "meters");
 var kilometersmeters = fractionMaker(1, "kilometers", 1000, "meters");
 
 var inchesfeet = fractionMaker(12, "inches", 1, "feet");
@@ -309,8 +309,7 @@ var feetmiles = fractionMaker(5280, "feet", 1, "miles");
 var feetmeters = fractionMaker(1, "meters", 3.28, "feet");
 var mileskilometers = fractionMaker(1, "miles", 1.609, "kilometers");
 
-var distances = [millimetersmeters, centermetersmeters, decimetersmeters, dekametersmeters, kilometersmeters, inchesfeet, feetyards, feetmiles, feetmeters, mileskilometers];
-
+var distances = [millimetersmeters, centermetersmeters, kilometersmeters, inchesfeet, feetyards, feetmiles, feetmeters, mileskilometers];
 
 // Volumes
 
@@ -318,16 +317,31 @@ var quartsgallons = fractionMaker(4, "quarts", 1, "gallons");
 var pintsgallons = fractionMaker(8, "pints", 1, "gallons");
 var ouncepints = fractionMaker(1, "pints", 16, "ounces");
 var litersquarts = fractionMaker(1, "quarts", 0.946, "liters");
+var cubiccentimetersmilliliters = fractionMaker(1, "centimeters^3", 1, "milliliters");
+var millilitersliters = fractionMaker(1000, "milliliters", 1, "liters");
 
-var volumes = [quartsgallons, pintsgallons, ouncepints, litersquarts];
+var volumes = [quartsgallons, pintsgallons, ouncepints, litersquarts, cubiccentimetersmilliliters, millilitersliters];
 
-// Times
+// Mass
+
+var kilogramspounds = fractionMaker(1, "kilograms", 22046, "pounds");
+var poundsgrams = fractionMaker(1, "pounds", 453.6, "grams");
+var gramskilograms = fractionMaker(1000, "grams", 1, "kilograms");
+var milligramsgrams = fractionMaker(1000, "milligrams", 1, "grams");
+
+var masses = [kilogramspounds, poundsgrams, gramskilograms, milligramsgrams];
+
+// Time
+
 var daysyears = fractionMaker(1, "years", 365, "days");
 var hoursdays = fractionMaker(1, "days", 24, "hours");
+var daysweeks = fractionMaker(7, "days", 1, "weeks");
 var minuteshours = fractionMaker(1, "hours", 60, "minutes");
 var secondsminutes = fractionMaker(1, "minutes", 60, "seconds");
+var millisecondsseconds = fractionMaker(1000, "milliseconds", 1, "seconds");
 
-var times = [daysyears, hoursdays, minuteshours, secondsminutes];
+var times = [daysyears, hoursdays, daysweeks, minuteshours, secondsminutes, millisecondsseconds];
+
 
 
 var customUnits = [];
@@ -360,11 +374,15 @@ function submitFactor() {
   addToList(frac, "custom");
 }
 
+
+
+
 $(document).ready(function() {
 
   fillList(distances, "distances");
   fillList(volumes, "volumes");
   fillList(times, "times");
+  fillList(masses, "mass");
   
   $("#submit").click(function() {
     submitFactor();
