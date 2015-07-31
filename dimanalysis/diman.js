@@ -332,15 +332,32 @@ var times = [daysyears, hoursdays, minuteshours, secondsminutes];
 
 var customUnits = [];
 
+function unitsReader(str) {
+  var units = {};
+  var unitsArray = str.split(" ");
+  for (var i = 0; i < unitsArray.length; i++) {
+    if (unitsArray[i].includes("^")) {
+      var unitBreakdown = unitsArray[i].split("^");
+      units[unitBreakdown[0]] = Number(unitBreakdown[1]);
+    } else {
+      units[unitsArray[i]] = 1;
+    }
+  }
+  return units;
+}
+
 function submitFactor() {
   console.log("submit button hit");
   var numeratorNumber = Number(document.getElementById("number1").value);
-  var numeratorUnit = document.getElementById("unit1").value;
+  var units = unitsReader(document.getElementById("unit1").value);
   var denominatorNumber = Number(document.getElementById("number2").value);
-  var denominatorUnit = document.getElementById("unit2").value;
-  var frac = fractionMaker(numeratorNumber, numeratorUnit, denominatorNumber, denominatorUnit);
+  var denominatorUnits = unitsReader(document.getElementById("unit2").value);
+  for (key in denominatorUnits) {
+    units[key] = - denominatorUnits[key];
+  }
+  var frac = new Fraction(numeratorNumber, denominatorNumber, units);
   customUnits.push(frac);
-  fillList(customUnits, "customList");
+  addToList(frac, "custom");
 }
 
 $(document).ready(function() {
