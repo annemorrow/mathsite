@@ -69,3 +69,20 @@
   font-size: 2em;
   float: left;
 }
+
+#win {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  margin-left: -250px;
+  width:500px;
+  margin-top:-150px;
+  height:300px;
+  background-color: lightgreen;
+  text-align: center;
+  font-size: 4em;
+  padding-top: 80px;
+  color: blue;
+}

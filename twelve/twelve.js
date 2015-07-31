@@ -204,15 +204,23 @@ var score = 0;
 
 setup();
 
+function winEvent() {
+  $("#win").css("display", "block");
+}
+
 function setup() {
   cards = [];
   document.getElementById("answer").value = "";
   document.getElementById("output").innerHTML = "";
   
   if(score >= 100) {
-    document.getElementById("scorefill").style.height = "282px";
+    document.getElementById("scorefill").style.height = "275px";
+    winEvent();
+    return;
+  } else if(score < 2) {
+    document.getElementById("scorefill").style.height = Math.floor(1/100*275) + "px";
   } else {
-    document.getElementById("scorefill").style.height = Math.floor(score/100*282) + "px";
+    document.getElementById("scorefill").style.height = Math.floor(score/100*275) + "px";
   }
   console.log("begin again");
   for (var i = 0; i < 4; i++) {
