@@ -374,7 +374,7 @@ function submitFactor() {
   addToList(frac, "custom");
 }
 
-
+var $window = $(window), $equation = $('#equation'), elTop = $equation.offset().top;
 
 
 $(document).ready(function() {
@@ -387,5 +387,12 @@ $(document).ready(function() {
   $("#submit").click(function() {
     submitFactor();
   });
+  
+  
+  
+  $window.scroll(function() {
+    $equation.toggleClass('sticky', $window.scrollTop() > elTop && $(window).height() < $(document).height() - elTop -100);
+  });
+  
 
 });

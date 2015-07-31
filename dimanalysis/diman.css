@@ -44,8 +44,22 @@ button {
 
 #equation {
   height:150px;
+  background-color:white;
+  width:100%;
+  z-index:1;
 }
 
 #result {
   float:left;
+}
+
+#instructions {
+  position:relative;
+  z-index:-1;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  border-bottom:double;
 }
