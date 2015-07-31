@@ -72,3 +72,14 @@ button {
 .percent:hover, .total:hover {
   cursor: pointer;
 }
+
+#success {
+  display: none;
+  position: absolute;
+  z-index: 1;
+  left: 124px;
+  top: 460px;
+  text-align: center;
+  font-size: 3em;
+  color: fuchsia;
+}

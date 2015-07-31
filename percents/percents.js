@@ -64,12 +64,12 @@ function displayProblem() {
 }
 
 function next() {
+  $("#success").css("display", "none");
   chooseAnswers();
   makeOptions(percents);
   makeOptions(outOf);
   displayProblem();
   document.getElementById('notes').textContent = "";
-  $('#next').addClass("inactive");
 }
 
 var chosenPercent;
@@ -92,15 +92,12 @@ $(document).ready(function() {
   });
   $('#check').click(function() {
     if (chosenPercent / 100 * chosenTotal == answer) {
-      document.getElementById('notes').textContent = "SUCCESS";
-      $('#next').removeClass('inactive');
+      $("#success").css("display", "block");
+      setTimeout(function(){
+      next();
+      }, 1000);
     } else {
       document.getElementById('notes').textContent = "Hint: " + hints[String(percents.answer)];
-    }
-  });
-  $('#next').click(function() {
-    if (!$('#next').hasClass("inactive")) {
-      next();
     }
   });
 });
