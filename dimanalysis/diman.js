@@ -391,7 +391,7 @@ $(document).ready(function() {
   
   
   $window.scroll(function() {
-    $equation.toggleClass('sticky', $window.scrollTop() > elTop && $(window).height() < $(document).height() - elTop -100);
+    $equation.toggleClass('sticky', $window.scrollTop() > elTop && $(window).height() < $(document).height() - elTop -$("#instructions").height());
   });
   
 
