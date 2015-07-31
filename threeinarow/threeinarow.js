@@ -55,6 +55,11 @@ function addDotToLine(dot) {
   $(dotDiv).append(popup);
   $(dotDiv).addClass("dot");
   $(dotDiv).addClass(dot.player);
+  if (dot.player === "player1") {
+    $(dotDiv).append("<p>X</p>");
+  } else {
+    $(dotDiv).append("<p>O</p>");
+  }
   $(dotDiv).css("left", dot.value * 100 + "%");
   $(dotDiv).data("value", dot.value);
   $("#dots").append(dotDiv);
