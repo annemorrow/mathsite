@@ -315,7 +315,7 @@ var distances = [millimetersmeters, centermetersmeters, kilometersmeters, inches
 
 var quartsgallons = fractionMaker(4, "quarts", 1, "gallons");
 var pintsgallons = fractionMaker(8, "pints", 1, "gallons");
-var ouncepints = fractionMaker(1, "pints", 16, "ounces");
+var ouncepints = fractionMaker(1, "pints", 16, "fluid_ounces");
 var litersquarts = fractionMaker(1, "quarts", 0.946, "liters");
 var cubiccentimetersmilliliters = fractionMaker(1, "centimeters^3", 1, "milliliters");
 var millilitersliters = fractionMaker(1000, "milliliters", 1, "liters");
@@ -324,12 +324,13 @@ var volumes = [quartsgallons, pintsgallons, ouncepints, litersquarts, cubiccenti
 
 // Mass
 
-var kilogramspounds = fractionMaker(1, "kilograms", 22046, "pounds");
+var kilogramspounds = fractionMaker(1, "kilograms", 2.2046, "pounds");
 var poundsgrams = fractionMaker(1, "pounds", 453.6, "grams");
 var gramskilograms = fractionMaker(1000, "grams", 1, "kilograms");
 var milligramsgrams = fractionMaker(1000, "milligrams", 1, "grams");
+var ouncespounds = fractionMaker(16, "ounces", 1, "pounds");
 
-var masses = [kilogramspounds, poundsgrams, gramskilograms, milligramsgrams];
+var masses = [kilogramspounds, poundsgrams, gramskilograms, milligramsgrams, ouncespounds];
 
 // Time
 
